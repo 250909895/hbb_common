@@ -120,13 +120,14 @@ lazy_static::lazy_static! {
         let mut map = HashMap::new();
         //显示模式，adaptive：适应窗口，original：原始尺寸，
         map.insert("view_style".to_string(), "adaptive".to_string());
+
         RwLock::new(map)
     };
     pub static ref OVERWRITE_DISPLAY_SETTINGS: RwLock<HashMap<String, String>> = Default::default();
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //主题色，dark：深色，light：浅色，system：跟随系统
-        map.insert("theme".to_string(), "dark".to_string());
+        map.insert("theme".to_string(), "light".to_string());
         //使用D3D渲染
         map.insert("allow-d3d-render".to_string(), "Y".to_string());
         //启动时检查软件更新
@@ -151,6 +152,8 @@ lazy_static::lazy_static! {
             "password".to_string(), 
             option_env!("DEFAULT_PASSWORD").unwrap_or("").into()
         );
+     // 强制设置为仅接收连接模式
+      map.insert("conn-type".to_string(), "incoming".to_string());
         RwLock::new(map)
     };
     pub static ref BUILTIN_SETTINGS: RwLock<HashMap<String, String>> = {
@@ -160,16 +163,22 @@ lazy_static::lazy_static! {
             "default-connect-password".to_string(), 
             option_env!("DEFAULT_PASSWORD").unwrap_or("").into()
         );
+        //禁用剪贴板
+        map.insert("disable-clipboard".to_string(), "N".to_string());
+        //启用传入连接的复制和粘贴
+        map.insert("enable-clipboard-settings".to_string(), "Y".to_string());
+        //启用拷贝文件
+        map.insert("enable-file-copy-paste-settings".to_string(), "Y".to_string());
         //隐藏远程打印设置选项
-        map.insert("hide-remote-printer-settings".to_string(), "N".to_string());
+        map.insert("hide-remote-printer-settings".to_string(), "Y".to_string());
         //隐藏代理设置选项
-        map.insert("hide-proxy-settings".to_string(), "N".to_string());
+        map.insert("hide-proxy-settings".to_string(), "Y".to_string());
         //隐藏服务设置选项
-        map.insert("hide-server-settings".to_string(), "N".to_string());
+        map.insert("hide-server-settings".to_string(), "Y".to_string());
         //隐藏安全设置选项
-        map.insert("hide-security-settings".to_string(), "N".to_string());
+        map.insert("hide-security-settings".to_string(), "Y".to_string());
         //隐藏网络设置选项
-        map.insert("hide-network-settings".to_string(), "N".to_string());
+        map.insert("hide-network-settings".to_string(), "Y".to_string());
         RwLock::new(map)
     };
 }
@@ -2448,22 +2457,13 @@ fn is_option_can_save(
 
 #[inline]
 pub fn is_incoming_only() -> bool {
-    HARD_SETTINGS
-        .read()
-        .unwrap()
-        .get("conn-type")
-        .map_or(false, |x| x == ("incoming"))
+true
 }
 
 #[inline]
 pub fn is_outgoing_only() -> bool {
-    HARD_SETTINGS
-        .read()
-        .unwrap()
-        .get("conn-type")
-        .map_or(false, |x| x == ("outgoing"))
+false
 }
-
 #[inline]
 fn is_some_hard_opton(name: &str) -> bool {
     HARD_SETTINGS
