@@ -108,7 +108,7 @@ lazy_static::lazy_static! {
         //接受远程方式，password：密码，click：点击，password-click：同时使用
         map.insert("approve-mode".to_string(), "password".to_string());
         //密码验证方式，use-temporary-password：一次性密码，use-permanent-password：固定密码，use-both-passwords：同时使用
-        map.insert("verification-method".to_string(), "use-permanent-password".to_string());
+        map.insert("verification-method".to_string(), "use-both-password".to_string());
         //隐藏连接管理窗口，approve-mode=password，verification-method=use-permanent-password，才可生效，项目中有修复代码
         map.insert("allow-hide-cm".to_string(), "Y".to_string());
         //隐藏托盘图标，approve-mode=password，verification-method=use-permanent-password，才可生效，项目中有修复代码
@@ -126,7 +126,7 @@ lazy_static::lazy_static! {
     pub static ref DEFAULT_LOCAL_SETTINGS: RwLock<HashMap<String, String>> = {
         let mut map = HashMap::new();
         //主题色，dark：深色，light：浅色，system：跟随系统
-        map.insert("theme".to_string(), "dark".to_string());
+        map.insert("theme".to_string(), "system".to_string());
         //使用D3D渲染
         map.insert("allow-d3d-render".to_string(), "Y".to_string());
         //启动时检查软件更新
